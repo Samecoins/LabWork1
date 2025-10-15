@@ -1,6 +1,6 @@
-﻿namespace MyComponents
+﻿namespace ShopApp.Components
 {
-    partial class ComboBoxControl19
+    partial class OrdersReportControl
     {
         /// <summary> 
         /// Обязательная переменная конструктора.
@@ -28,15 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            SuspendLayout();
-            // 
-            // ComboBoxControl19
-            // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
-            Name = "ComboBoxControl19";
-            Size = new Size(1049, 512);
-            ResumeLayout(false);
+            components = new System.ComponentModel.Container();
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         }
 
         #endregion
