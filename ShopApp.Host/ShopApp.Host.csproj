@@ -1,17 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MyComponents\MyComponents.csproj" />
-    <ProjectReference Include="..\ShopApp.Components\ShopApp.Components.csproj" />
-    <ProjectReference Include="..\ShopApp.Domain\ShopApp.Domain.csproj" />
-  </ItemGroup>
-
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net9.0-windows</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ShopApp.Contract\ShopApp.Contract.csproj" />
+		<ProjectReference Include="..\MyComponents\MyComponents.csproj" />
+		<ProjectReference Include="..\ShopApp.Domain\ShopApp.Domain.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<!-- лицензия будет лежать рядом с exe -->
+		<None Include="license.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 </Project>

@@ -1,4 +1,6 @@
-﻿using ShopApp.Components;
+﻿using ShopApp.Contract;
+using System.Reflection;
+using System.Text.Json;
 
 namespace ShopApp.Host;
 
@@ -21,29 +23,94 @@ public partial class MainForm : Form
         Controls.Add(tabs);
         Controls.Add(menu);
 
-        // Меню статически (уровень «Хорошо»)
-        miDirectories.DropDownItems.Add("Статусы заказа", null, (_, __) => OpenTab("Статусы заказа", () => new StatusDirectoryControl()));
-        miDirectories.DropDownItems.Add("Заказы", null, (_, __) => OpenTab("Заказы", () => new OrdersControl()));
-        miReports.DropDownItems.Add("Отчёт по заказам", null, (_, __) => OpenTab("Отчёт по заказам", () => new OrdersReportControl()));
-
-        // Закрытие вкладки по двойному клику
         tabs.MouseDoubleClick += (_, __) =>
         {
-            if (tabs.TabPages.Count == 0) return;
             var page = tabs.SelectedTab;
             if (page != null) tabs.TabPages.Remove(page);
         };
+
+        try
+        {
+            var all = LoadExtensions();
+            var allowed = FilterByLicense(all);
+
+            foreach (var c in allowed.Where(x => x.Category == "Справочники"))
+            {
+                var mi = new ToolStripMenuItem(c.Title);
+                mi.Click += (_, __) => OpenTab(c);
+                miDirectories.DropDownItems.Add(mi);
+            }
+            foreach (var c in allowed.Where(x => x.Category == "Отчёты"))
+            {
+                var mi = new ToolStripMenuItem(c.Title);
+                mi.Click += (_, __) => OpenTab(c);
+                miReports.DropDownItems.Add(mi);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Ошибка при загрузке компонентов");
+        }
     }
 
-    private void OpenTab(string title, Func<Control> factory)
+    private void OpenTab(IComponentContract comp)
     {
         foreach (TabPage p in tabs.TabPages)
-            if (p.Text == title) { tabs.SelectedTab = p; return; }
+            if (p.Text == comp.Title) { tabs.SelectedTab = p; return; }
 
-        var page = new TabPage(title) { Padding = new Padding(0) };
-        var ctl = factory(); ctl.Dock = DockStyle.Fill;
+        var page = new TabPage(comp.Title) { Padding = new Padding(0) };
+        var ctl = comp.CreateControl(); ctl.Dock = DockStyle.Fill;
         page.Controls.Add(ctl);
         tabs.TabPages.Add(page);
         tabs.SelectedTab = page;
+    }
+
+    private static List<IComponentContract> LoadExtensions()
+    {
+        var list = new List<IComponentContract>();
+        var dir = Path.Combine(AppContext.BaseDirectory, "Components");
+        Directory.CreateDirectory(dir);
+
+        foreach (var dll in Directory.GetFiles(dir, "*.dll"))
+        {
+            try
+            {
+                var asm = Assembly.LoadFrom(dll);
+                var types = asm.GetTypes()
+                    .Where(t => typeof(IComponentContract).IsAssignableFrom(t) && !t.IsAbstract);
+
+                foreach (var t in types)
+                    if (Activator.CreateInstance(t) is IComponentContract comp)
+                        list.Add(comp);
+            }
+            catch { /* пропускаем неподходящие */ }
+        }
+        return list;
+    }
+
+    private static IReadOnlyList<IComponentContract> FilterByLicense(IEnumerable<IComponentContract> comps)
+    {
+        var path = Path.Combine(AppContext.BaseDirectory, "license.json");
+        if (!File.Exists(path)) return comps.ToList(); 
+
+        var json = File.ReadAllText(path);
+        var lic = JsonSerializer.Deserialize<LicenseModel>(json) ?? new();
+
+        if (lic.Allow != null && lic.Allow.Count > 0)
+            return comps.Where(c => lic.Allow.Contains(c.Id, StringComparer.OrdinalIgnoreCase)).ToList();
+
+        return lic.Role?.ToLowerInvariant() switch
+        {
+            "minimal" => comps.Where(c => c.Id == "status-directory").ToList(),
+            "basic" => comps.Where(c => c.Id is "status-directory" or "orders").ToList(),
+            "advanced" => comps.ToList(),
+            _ => comps.ToList()
+        };
+    }
+
+    private sealed class LicenseModel
+    {
+        public string? Role { get; set; }
+        public List<string> Allow { get; set; } = new();
     }
 }

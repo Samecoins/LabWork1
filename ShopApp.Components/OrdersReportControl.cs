@@ -45,14 +45,12 @@ public partial class OrdersReportControl : UserControl
             q = q.Where(o => o.Status == sel);
 
         grid.DataSource = new BindingList<Order>(q.ToList());
-        HideTechnicalColumns(); // важно: после каждого ребинда
+        HideTechnicalColumns(); 
     }
 
     private void HideTechnicalColumns()
     {
         if (grid.Columns.Contains(nameof(Order.Id)))
             grid.Columns[nameof(Order.Id)].Visible = false;
-        // при желании можно спрятать ещё что-то служебное:
-        // if (grid.Columns.Contains(nameof(Order.ShortId))) grid.Columns[nameof(Order.ShortId)].Visible = false;
     }
 }

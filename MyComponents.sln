@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopApp.Components", "ShopA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopApp.Host", "ShopApp.Host\ShopApp.Host.csproj", "{5F129EB0-D76C-4D63-A2C6-E427FCC0724B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopApp.Contract", "ShopApp.Contract\ShopApp.Contract.csproj", "{AA2FF08F-F67C-4C8A-A72B-2161D495B394}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{5F129EB0-D76C-4D63-A2C6-E427FCC0724B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F129EB0-D76C-4D63-A2C6-E427FCC0724B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F129EB0-D76C-4D63-A2C6-E427FCC0724B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA2FF08F-F67C-4C8A-A72B-2161D495B394}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA2FF08F-F67C-4C8A-A72B-2161D495B394}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA2FF08F-F67C-4C8A-A72B-2161D495B394}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA2FF08F-F67C-4C8A-A72B-2161D495B394}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
