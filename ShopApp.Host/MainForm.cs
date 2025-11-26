@@ -91,10 +91,17 @@ public partial class MainForm : Form
     private static IReadOnlyList<IComponentContract> FilterByLicense(IEnumerable<IComponentContract> comps)
     {
         var path = Path.Combine(AppContext.BaseDirectory, "license.json");
-        if (!File.Exists(path)) return comps.ToList(); 
+        if (!File.Exists(path)) return comps.ToList();
 
         var json = File.ReadAllText(path);
-        var lic = JsonSerializer.Deserialize<LicenseModel>(json) ?? new();
+
+        var opts = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+        var lic = JsonSerializer.Deserialize<LicenseModel>(json, opts) ?? new();
+
+        MessageBox.Show($"Role: {lic.Role}\nAllow count: {lic.Allow?.Count ?? 0}");
 
         if (lic.Allow != null && lic.Allow.Count > 0)
             return comps.Where(c => lic.Allow.Contains(c.Id, StringComparer.OrdinalIgnoreCase)).ToList();
@@ -107,6 +114,7 @@ public partial class MainForm : Form
             _ => comps.ToList()
         };
     }
+
 
     private sealed class LicenseModel
     {
