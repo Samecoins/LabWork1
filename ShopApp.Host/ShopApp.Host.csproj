@@ -7,6 +7,7 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\ReportContracts\ReportContracts.csproj" />
 		<ProjectReference Include="..\ShopApp.Contract\ShopApp.Contract.csproj" />
 		<ProjectReference Include="..\MyComponents\MyComponents.csproj" />
 		<ProjectReference Include="..\ShopApp.Domain\ShopApp.Domain.csproj" />
@@ -16,5 +17,9 @@
 		<None Include="license.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
+	  <PackageReference Include="EPPlus" Version="8.3.0" />
 	</ItemGroup>
 </Project>

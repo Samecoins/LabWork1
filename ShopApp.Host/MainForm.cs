@@ -9,6 +9,7 @@ public partial class MainForm : Form
     private readonly MenuStrip menu = new();
     private readonly ToolStripMenuItem miDirectories = new("Справочники");
     private readonly ToolStripMenuItem miReports = new("Отчёты");
+    private readonly ToolStripMenuItem miExtensions = new("Расширения");
     private readonly TabControl tabs = new() { Dock = DockStyle.Fill };
 
     public MainForm()
@@ -18,7 +19,14 @@ public partial class MainForm : Form
         Text = "Учёт заказов (Вариант 19) — ЛР2 'Хорошо'";
         Width = 900; Height = 600;
 
-        menu.Items.AddRange(new ToolStripItem[] { miDirectories, miReports });
+        menu.Items.AddRange(new ToolStripItem[] { miDirectories, miReports, miExtensions});
+
+        miExtensions.Click += (_, __) =>
+        {
+            using var frm = new ExtensionsForm();
+            frm.ShowDialog(this);
+        };
+
         MainMenuStrip = menu;
         Controls.Add(tabs);
         Controls.Add(menu);
